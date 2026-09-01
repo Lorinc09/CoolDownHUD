@@ -34,8 +34,9 @@ Semmi mást nem kell előre feltelepíteni: a program mindent hoz magával.
 
 ## Telepítés
 
-1. Töltsd le a legfrissebb `CoolDownHUD-Setup-x.y.z.exe` fájlt a
-   [kiadások](../../releases/latest) közül.
+1. Töltsd le a telepítőt:
+   **[CoolDownHUD-Setup.exe](https://github.com/Lorinc09/CoolDownHUD/releases/latest/download/CoolDownHUD-Setup.exe)**
+   — ez a cím mindig a legfrissebb verziót adja.
 2. Indítsd el.
 
 ### A Windows figyelmeztetni fog
