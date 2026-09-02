@@ -1,6 +1,7 @@
 # CoolDownHUD
 
-Este, játék után megmutatja, mikor hűlt le a géped annyira, hogy nyugodtan kikapcsolhasd.
+Este, játék után megmutatja, mikor hűlt le a géped annyira, hogy nyugodtan kikapcsolhasd — és ha
+mégis meleg géppel akarod leállítani, előbb rákérdez.
 
 Amikor kikapcsolod a gépet, a ventilátorok azonnal leállnak. Ha a hűtőbordában még benne van a
 játék melege, az visszaszivárog az alkatrészekbe — ez hosszú távon nem tesz jót nekik. Ez a program
@@ -17,20 +18,38 @@ megmondja, mikor van túl ezen a gép.
 - Ha egy ablak eltakarná, átugrik a másik monitorra. Ha nincs hova, elrejtőzik, és visszajön, amint
   felszabadul a hely.
 - Játék közben nem látszik.
+- **Ha meleg géppel indítasz leállítást, megkérdezi, biztos vagy-e benne.** Ez egész nap érvényes,
+  nem csak este.
 
 **Nem kell beállítani semmit.** A program az első használat során megtanulja, milyen a te géped
 nyugalomban, és ahhoz méri magát. Amíg tanul, `CALIBRATING` felirat látszik rajta.
 
 ## Mi kell hozzá
 
-| | |
-|---|---|
-| Windows | 10 vagy 11 (64 bites) |
-| Processzor hőfokához | **GIGABYTE alaplap**, telepített GIGABYTE APP Center / SIV programmal |
-| Videokártya hőfokához | **NVIDIA** kártya, telepített meghajtóval |
+Windows 10 vagy 11, 64 bites. Ezen felül semmit nem kell előre feltelepíteni: a program mindent
+hoz magával.
 
-Más gépeken a program elindul, de nem tud hőfokot mérni — ilyenkor ezt ki is írja a kijelzőn.
-Semmi mást nem kell előre feltelepíteni: a program mindent hoz magával.
+A hőfokokat több forrásból is ki tudja olvasni. Az első indításkor mindet végigpróbálja, a legjobbat
+választja, és egy ablakban megmutatja, mit talált:
+
+| Forrás | Mit ad | Mikor működik |
+|---|---|---|
+| GIGABYTE SIV | processzor | GIGABYTE alaplap, telepített APP Center / SIV |
+| Beépített szenzorkönyvtár | processzor és videokártya | mindenhol; a processzorhoz kell hozzá a PawnIO driver |
+| HWiNFO | processzor és videokártya | ha fut a HWiNFO, bekapcsolt „Shared Memory Support" mellett |
+| LibreHardwareMonitor / OpenHardwareMonitor | processzor és videokártya | ha fut valamelyik program |
+| NVIDIA meghajtó | videokártya | NVIDIA kártya, telepített meghajtóval |
+| ACPI hőzóna | processzor (közelítés) | a legtöbb gépen, de nem mindig a procimagot méri |
+
+### Ha nincs processzor-hőmérséklet
+
+A processzor maghőfokját Windows alatt csak kernel szintről lehet kiolvasni. Ha a fenti források
+egyike sem érhető el, a program felajánlja a **PawnIO** telepítését — ez egy önálló, nyílt forrású,
+digitálisan aláírt driver, ami ezt a hozzáférést biztosítja. Egy gombnyomás; a telepítő a saját
+kiadási oldaláról töltődik le, és a program futtatás előtt ellenőrzi az aláírását.
+
+Ez a te döntésed: a program nem telepít drivert a hátad mögött. Nélküle is elindul, csak a
+processzor hőfokát nem fogja látni.
 
 ## Telepítés
 
@@ -68,6 +87,25 @@ nyílik: a kijelző elrejtése, a hangjelzés kapcsolója és a kilépés.
 
 A kijelzőt **Alt + bal gombbal** lehet áthelyezni, ha máshol szeretnéd.
 
+## A leállítás előtti kérdés
+
+Ha a gép még meleg, és leállítod, a program közbelép, és megmutatja a két hőfokot a hozzájuk tartozó
+határral. Két választásod van: `Keep cooling` (marad bekapcsolva) vagy `Power off anyway` (leáll).
+Az Enter és az Esc is a biztonságos választ adja.
+
+Néhány dolgot érdemes tudni róla, mert ezek a Windows korlátai, nem a programéi:
+
+- **A Windows a saját kék lapját is kirakja** a leállítást akadályozó programokról. Ezt nem lehet
+  elnyomni; a CoolDownHUD szövege ezen a lapon is ott áll. Ha a *Mégse* gombot választod, alatta
+  megtalálod a program saját ablakát a valódi gombokkal.
+- **Újraindításkor is kérdezni fog**, pedig ott a ventilátorok végig járnak: a Windows nem árulja
+  el, hogy leállításról vagy újraindításról van-e szó. A kijelentkezést viszont felismeri, és
+  kihagyja.
+- **Alvó állapotra és hibernálásra nem kérdez rá.** Azokat a Windows nem kérdésként, hanem
+  értesítésként küldi — nincs mód megállítani őket.
+- **Kényszerített leállításnál** (`shutdown /f`, rendszerfrissítés határideje, lemerülő akkumulátor)
+  szándékosan nem akadékoskodik.
+
 ## Frissítés
 
 A program naponta egyszer megnézi, van-e újabb verzió, és ha van, magától letölti és telepíti.
@@ -76,3 +114,10 @@ Nem kell vele foglalkoznod. Játék közben soha nem frissít.
 ## Eltávolítás
 
 A Windows *Beállítások → Alkalmazások* listájából, mint bármely más programot.
+
+## Felhasznált munkák
+
+- [LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor) — MPL-2.0.
+  A licencszöveg a telepítési mappa `licenses` almappájában található.
+- [PawnIO](https://pawnio.eu) — GPL-2.0. Nem része a telepítőnek; a program csak felajánlja, és a
+  saját kiadási oldaláról tölti le, ha kéred.
